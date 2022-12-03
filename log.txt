@@ -1,21 +1,14 @@
-URL: /documentation
-Timestamp: Thu Dec 01 2022 23:29:30 GMT-0500 (Eastern Standard Time)
-
-URL: /index
-Timestamp: Thu Dec 01 2022 23:29:35 GMT-0500 (Eastern Standard Time)
-
-URL: /documentation 
-Timestamp: Thu Dec 01 2022 23:35:32 GMT-0500 (Eastern Standard Time)
-
-URL: /index 
-Timestamp: Thu Dec 01 2022 23:35:37 GMT-0500 (Eastern Standard Time)
-
-URL: /index 
-Timestamp: Thu Dec 01 2022 23:35:43 GMT-0500 (Eastern Standard Time)
-
-URL: /index 
-Timestamp: Thu Dec 01 2022 23:36:58 GMT-0500 (Eastern Standard Time)
-
-URL: /documentation 
-Timestamp: Thu Dec 01 2022 23:37:05 GMT-0500 (Eastern Standard Time)
-
+sample
+1670097952122
+1670097952122
+::1 - - [03/Dec/2022:20:10:14 +0000] "GET /documentation HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:24:52 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:24:59 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:26:57 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:26:58 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:27:00 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:29:01 +0000] "GET /documentation HTTP/1.1" 404 152 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:29:08 +0000] "GET /documentation.html HTTP/1.1" 200 5310 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:29:14 +0000] "GET /index.html HTTP/1.1" 200 320 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:30:36 +0000] "GET /static/documentation.html HTTP/1.1" 404 164 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+::1 - - [03/Dec/2022:20:30:50 +0000] "GET /static/documentation.html HTTP/1.1" 200 5310 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
