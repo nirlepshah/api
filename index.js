@@ -1,43 +1,108 @@
 const express = require('express'),
     bodyParser = require('body-parser'),
     uuid = require('uuid');
-let { movies, users } = require('./database.js')
+const mongoose = require('mongoose')
+
+const Models = require('./models')
+
+const Movies = Models.Movie
+const Users = Models.User
+
+
+let { movies, users } = require('./database.js');
+
 
 const app = express()
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
+let url = 'mongodb://localhost:27017/myFilmDB'
 
+mongoose.connect(url, (err, db) => {
+    if (err) {
+        throw new Error
+    }
+    else {
+        console.log("Connected");
+        // db.close()
+    }
+
+})
 
 app.get('/movies', (req, res) => {
-    res.status(200).json(movies)
-    console.log(users);
+    // res.status(200).json(movies)
+    // console.log(users);
+    Movies.find((err, movies) => {
+        if (err) {
+            throw new Error
+        }
+        else {
+            res.json(movies)
+        }
+    })
 })
+// app.get('/movies/:title', (req, res) => {
+//     const { title } = req.params
+//     const movie = movies.find((movie) => {
+//         return movie.Title === title
+//     })
+//     if (movie) {
+//         res.status(200).json(movie)
+
+//     }
+//     else {
+//         res.status(400).send("No movie found")
+//     }
+
+// })
 app.get('/movies/:title', (req, res) => {
     const { title } = req.params
-    const movie = movies.find((movie) => {
-        return movie.Title === title
+    Movies.findOne({
+        Title: `${title}`
+    }, function (err, movie) {
+        if (err) {
+            console.log(err);
+        }
+        else if (movie) {
+            res.status(200).json(movie)
+        }
+        else {
+            res.status(400).send("No movie found")
+        }
     })
-    if (movie) {
-        res.status(200).json(movie)
 
-    }
-    else {
-        res.status(400).send("No movie found")
-    }
 
 })
 
+// app.get('/movies/genre/:genreName', (req, res) => {
+//     const { genreName } = req.params
+//     const movie = movies.find((movie) => {
+//         return (movie.Genre.Name === genreName)
+//     })
+//     if (movie) {
+//         res.status(200).json(movie.Genre)
+//     }
+//     else {
+//         res.status(400).send("Genre not found")
+//     }
+
+// })
 app.get('/movies/genre/:genreName', (req, res) => {
     const { genreName } = req.params
-    const movie = movies.find((movie) => {
-        return (movie.Genre.Name === genreName)
+    Movies.findOne({
+        'Genre.Name': `${genreName}`
+    }, function (err, movie) {
+        if (err) {
+            console.log(err);
+        }
+        else if (movie) {
+            res.status(200).json(movie)
+        }
+        else {
+            res.status(400).send(`No movie with the genre ${genreName} found`)
+        }
     })
-    if (movie) {
-        res.status(200).json(movie.Genre)
-    }
-    else {
-        res.status(400).send("Genre not found")
-    }
+
 
 })
 app.get('/movies/director/:directorName', (req, res) => {
