@@ -6,12 +6,12 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 const accessStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: "a" })
-
+//middleware to log url
 let myLogger = (req, res, next) => {
     console.log(req.url);
     next();
 }
-
+//middleware
 let requestTime = (req, res, next) => {
     req.requestTime = new Date().toString()
     console.log(`Requested at: ${req.requestTime}`);
@@ -22,11 +22,12 @@ let requestTime = (req, res, next) => {
 
 // app.use(myLogger);
 // app.use(requestTime)
-
+//thrird party middleware
 app.use(morgan('combined', { stream: accessStream }))
 
 app.use('/static', express.static('public')) //middleware to serve the static files 
 
+//example aray 
 let topBooks = [
     {
         title: 'Harry Potter and the Sorcerer\'s Stone',
