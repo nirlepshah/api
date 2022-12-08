@@ -297,19 +297,19 @@ app.post('/users', async (req, res) => {
 
 })
 
-app.post('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params
-    let user = users.find((user) => {
-        return user.id == id
-    })
-    if (user) {
-        user.favoriteMovies.push(movieTitle)
-        res.status(200).send(`${movieTitle} has been added to the favaorite movies for the useID: ${id}`)
-    }
-    else {
-        res.status(400).send('User not found')
-    }
-})
+// app.post('/users/:id/:movieTitle', (req, res) => {
+//     const { id, movieTitle } = req.params
+//     let user = users.find((user) => {
+//         return user.id == id
+//     })
+//     if (user) {
+//         user.favoriteMovies.push(movieTitle)
+//         res.status(200).send(`${movieTitle} has been added to the favaorite movies for the useID: ${id}`)
+//     }
+//     else {
+//         res.status(400).send('User not found')
+//     }
+// })
 app.delete('/users/:id/:movieTitle', (req, res) => {
     const { id, movieTitle } = req.params
     let user = users.find((user) => {
