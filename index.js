@@ -310,22 +310,22 @@ app.post('/users', async (req, res) => {
 //         res.status(400).send('User not found')
 //     }
 // })
-// app.delete('/users/:id/:movieTitle', (req, res) => {
-//     const { id, movieTitle } = req.params
-//     let user = users.find((user) => {
-//         return user.id == id
-//     })
-//     if (user && user.favoriteMovies.includes(`${movieTitle}`)) {
-//         console.log(user.favoriteMovies);
-//         user.favoriteMovies = user.favoriteMovies.filter((title) => {
-//             return title !== movieTitle
-//         })
-//         res.status(200).send(`${movieTitle} has been deleted from the favaorite movies for the useID: ${id}`)
-//     }
-//     else {
-//         res.status(400).send('User not found')
-//     }
-// })
+app.delete('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params
+    let user = users.find((user) => {
+        return user.id == id
+    })
+    if (user && user.favoriteMovies.includes(`${movieTitle}`)) {
+        console.log(user.favoriteMovies);
+        user.favoriteMovies = user.favoriteMovies.filter((title) => {
+            return title !== movieTitle
+        })
+        res.status(200).send(`${movieTitle} has been deleted from the favaorite movies for the useID: ${id}`)
+    }
+    else {
+        res.status(400).send('User not found')
+    }
+})
 app.delete('/users/:id', (req, res) => {
     const { id } = req.params
     let user = users.find((user) => {
