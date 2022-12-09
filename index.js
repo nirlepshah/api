@@ -170,7 +170,7 @@ app.get('/users/:Username', async (req, res) => {
             res.status(200).json(user)
         }
         else {
-            res.status(400).send(`User with username: ${Username} not found`)
+            res.status(400).send(`User with username: ${req.params.Username} not found`)
         }
 
     } catch (err) {
@@ -259,6 +259,35 @@ app.put('/users/:Username/movies/:MovieID', async (req, res) => {
 
 })
 
+// Allow user to remove the favorite movie
+app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
+
+    try {
+
+        const user = await Users.findOneAndUpdate({ Username: req.params.Username }, {
+            $pull:
+            {
+                FavoriteMovies: req.params.MovieID
+            }
+        }
+            , { new: true })
+
+        if (user) {
+            // console.log(user);
+            res.status(200).json(user)
+        }
+        else {
+            res.status(400).send(`User not found `)
+        }
+    } catch (err) {
+        console.log(err);
+    }
+
+
+
+
+})
+
 // app.post('/users', (req, res) => {
 //     const newUser = req.body
 //     if (newUser.name) {
@@ -274,7 +303,7 @@ app.put('/users/:Username/movies/:MovieID', async (req, res) => {
 app.post('/users', async (req, res) => {
 
     try {
-        const userName = req.body.Username
+
         const user = await Users.findOne({ Username: req.body.Username })
         if (user) {
             return res.status(400).send(req.body.Username + ' already exists');
@@ -310,40 +339,61 @@ app.post('/users', async (req, res) => {
 //         res.status(400).send('User not found')
 //     }
 // })
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params
-    let user = users.find((user) => {
-        return user.id == id
-    })
-    if (user && user.favoriteMovies.includes(`${movieTitle}`)) {
-        console.log(user.favoriteMovies);
-        user.favoriteMovies = user.favoriteMovies.filter((title) => {
-            return title !== movieTitle
-        })
-        res.status(200).send(`${movieTitle} has been deleted from the favaorite movies for the useID: ${id}`)
-    }
-    else {
-        res.status(400).send('User not found')
-    }
-})
-app.delete('/users/:id', (req, res) => {
-    const { id } = req.params
-    let user = users.find((user) => {
-        return user.id == id
-    })
-    if (user) {
+//Delete a user by username
+app.delete('/users/:Username', async (req, res) => {
 
-        users = users.filter((user) => {
-            return user.id != id
+    try {
+        const user = await Users.findOneAndRemove({ Username: req.params.Username })
 
-        })
-        res.json(users)
-        // res.status(200).send(`User with ID: ${id} has been deleted`)
+        if (user) {
+            res.status(200).send(`Username ${req.params.Username} is removed `)
+        } else {
+            res.status(400).send(`Username ${req.params.Username} not found `)
+
+        }
+    } catch (err) {
+        console.log(err);
     }
-    else {
-        res.status(400).send('User not found')
-    }
+
 })
+
+
+
+
+// app.delete('/users/:id/:movieTitle', (req, res) => {
+//     const { id, movieTitle } = req.params
+//     let user = users.find((user) => {
+//         return user.id == id
+//     })
+//     if (user && user.favoriteMovies.includes(`${movieTitle} `)) {
+//         console.log(user.favoriteMovies);
+//         user.favoriteMovies = user.favoriteMovies.filter((title) => {
+//             return title !== movieTitle
+//         })
+//         res.status(200).send(`${movieTitle} has been deleted from the favaorite movies for the useID: ${id} `)
+//     }
+//     else {
+//         res.status(400).send('User not found')
+//     }
+// })
+// app.delete('/users/:id', (req, res) => {
+//     const { id } = req.params
+//     let user = users.find((user) => {
+//         return user.id == id
+//     })
+//     if (user) {
+
+//         users = users.filter((user) => {
+//             return user.id != id
+
+//         })
+//         res.json(users)
+//         // res.status(200).send(`User with ID: ${ id } has been deleted`)
+//     }
+//     else {
+//         res.status(400).send('User not found')
+//     }
+// })
 app.listen(8080, () => {
     console.log("App is runing on port 8080");
 })
