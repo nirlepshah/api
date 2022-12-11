@@ -4,19 +4,32 @@ const express = require('express'),
 const mongoose = require('mongoose')
 
 const Models = require('./models')
+const ejs = require('ejs')
+const passport = require('passport');
+require('./passport')
 
-const Movies = Models.Movie
-const Users = Models.User
+let Movies = Models.Movie
+let Users = Models.User
 
 
 let { movies, users } = require('./database.js');
 
 
 const app = express()
+
+app.set('view engine', 'ejs')
+app.use(express.json())
 app.use(bodyParser.json())// middelware to access requets body 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))// middleware to access the content of the req.body
+app.use(express.static('public'))
+
+
+
 
 let url = 'mongodb://localhost:27017/myFilmDB'
+
+
+
 
 //mongo db connection 
 mongoose.connect(url, (err, db) => {
@@ -30,8 +43,12 @@ mongoose.connect(url, (err, db) => {
 
 })
 
+
+let auth = require('./auth')(app)
+require('./passport')
+
 //GET all movies 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     Movies.find((err, movies) => {
         if (err) {
@@ -44,7 +61,7 @@ app.get('/movies', (req, res) => {
 })
 
 // Get movie by title 
-app.get('/movies/:title', (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { title } = req.params
     Movies.findOne({
         Title: `${title}`
@@ -65,7 +82,7 @@ app.get('/movies/:title', (req, res) => {
 
 // Get movie by genreName
 
-app.get('/movies/genre/:genreName', async (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const { genreName } = req.params
         const movie = await Movies.findOne({
@@ -84,7 +101,7 @@ app.get('/movies/genre/:genreName', async (req, res) => {
     }
 })
 //Get Movie by director name
-app.get('/movies/director/:directorName', async (req, res) => {
+app.get('/movies/director/:directorName', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const { directorName } = req.params
 
@@ -103,7 +120,7 @@ app.get('/movies/director/:directorName', async (req, res) => {
 
 })
 //Get all users aync 
-app.get('/users', async (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
         const user = await Users.find()
@@ -117,7 +134,7 @@ app.get('/users', async (req, res) => {
 })
 
 // Get a user by username async
-app.get('/users/:Username', async (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
 
         const user = await Users.findOne({ Username: req.params.Username })
@@ -135,7 +152,7 @@ app.get('/users/:Username', async (req, res) => {
 })
 
 //Update userdata async
-app.put('/users/:Username', async (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
 
@@ -167,7 +184,7 @@ app.put('/users/:Username', async (req, res) => {
 })
 
 // Add a movie to a user's list of favorites
-app.put('/users/:Username/movies/:MovieID', async (req, res) => {
+app.put('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
 
@@ -196,7 +213,7 @@ app.put('/users/:Username/movies/:MovieID', async (req, res) => {
 })
 
 // Allow user to remove the favorite movie
-app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
 
@@ -252,7 +269,7 @@ app.post('/users', async (req, res) => {
 })
 
 //Delete user by Username
-app.delete('/users/:Username', async (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
         const user = await Users.findOneAndRemove({ Username: req.params.Username })
@@ -268,6 +285,7 @@ app.delete('/users/:Username', async (req, res) => {
     }
 
 })
+
 
 app.listen(8080, () => {
     console.log("App is runing on port 8080");
