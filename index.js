@@ -2,12 +2,14 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     uuid = require('uuid');
 const mongoose = require('mongoose')
+const cors = require('cors');
+const bcrypt = require('bcrypt')
 
 const Models = require('./models')
 const ejs = require('ejs')
 const passport = require('passport');
 require('./passport')
-
+const saltRounds = 10;
 let Movies = Models.Movie
 let Users = Models.User
 
@@ -16,6 +18,25 @@ let { movies, users } = require('./database.js');
 
 
 const app = express()
+
+
+var allowedOrigins = ['http://localhost:8080',
+    'http://yourapp.com'];
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin 
+        // (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+}));
+
+
 
 app.set('view engine', 'ejs')
 app.use(express.json())
@@ -56,6 +77,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
         }
         else {
             res.json(movies)
+
         }
     })
 })
@@ -245,7 +267,7 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 app.post('/users', async (req, res) => {
 
     try {
-
+        let hashedPassword = Users.hashPassword(req.body.Password);
         const user = await Users.findOne({ Username: req.body.Username })
         if (user) {
             return res.status(400).send(req.body.Username + ' already exists');
@@ -254,7 +276,7 @@ app.post('/users', async (req, res) => {
         else {
             const user = await Users.create({
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
             })
@@ -268,7 +290,36 @@ app.post('/users', async (req, res) => {
 
 })
 
+// app.post('/users', (req, res) => {
+//     let hashedPassword = Users.hashPassword(req.body.Password);
+//     Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+//         .then((user) => {
+//             if (user) {
+//                 //If the user is found, send a response that it already exists
+//                 return res.status(400).send(req.body.Username + ' already exists');
+//             } else {
+//                 Users
+//                     .create({
+//                         Username: req.body.Username,
+//                         Password: hashedPassword,
+//                         Email: req.body.Email,
+//                         Birthday: req.body.Birthday
+//                     })
+//                     .then((user) => { res.status(201).json(user) })
+//                     .catch((error) => {
+//                         console.error(error);
+//                         res.status(500).send('Error: ' + error);
+//                     });
+//             }
+//         })
+//         .catch((error) => {
+//             console.error(error);
+//             res.status(500).send('Error: ' + error);
+//         });
+// });
+
 //Delete user by Username
+
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {

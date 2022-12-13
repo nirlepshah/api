@@ -1,5 +1,6 @@
 const jwtSecret = 'secret'
 
+
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
