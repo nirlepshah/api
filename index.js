@@ -10,6 +10,8 @@ const ejs = require('ejs')
 const passport = require('passport');
 require('./passport')
 const saltRounds = 10;
+const { check, validationResult } = require('express-validator')
+
 let Movies = Models.Movie
 let Users = Models.User
 
@@ -24,8 +26,7 @@ var allowedOrigins = ['http://localhost:8080',
     'http://yourapp.com'];
 app.use(cors({
     origin: function (origin, callback) {
-        // allow requests with no origin 
-        // (like mobile apps or curl requests)
+
         if (!origin) return callback(null, true);
         if (allowedOrigins.indexOf(origin) === -1) {
             var msg = 'The CORS policy for this site does not ' +
@@ -53,16 +54,18 @@ let url = 'mongodb://localhost:27017/myFilmDB'
 
 
 //mongo db connection 
-mongoose.connect(url, (err, db) => {
-    if (err) {
-        throw new Error
-    }
-    else {
-        console.log("Connected");
-        // db.close()
-    }
+mongoose.connect(url,
 
-})
+    (err, db) => {
+        if (err) {
+            throw new Error
+        }
+        else {
+            console.log("Connected");
+            // db.close()
+        }
+
+    })
 
 
 let auth = require('./auth')(app)
@@ -174,10 +177,18 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), as
 })
 
 //Update userdata async
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:Username', [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], passport.authenticate('jwt', { session: false }), async (req, res) => {
 
     try {
-
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
         const user = await Users.findOneAndUpdate({ Username: req.params.Username }, {
             $set:
             {
@@ -264,9 +275,17 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 })
 
 //Create user Async
-app.post('/users', async (req, res) => {
+app.post('/users', [check('Username', 'Username is required').isLength({ min: 5 }),
+check('Username', 'Username contains non alphanumeric characters').isAlphanumeric(),
+check('Password', 'Password required').not().isEmpty(),
+check('Email', 'Email does not appear to be valid').isEmail()
+], async (req, res) => {
 
     try {
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
+        }
         let hashedPassword = Users.hashPassword(req.body.Password);
         const user = await Users.findOne({ Username: req.body.Username })
         if (user) {
