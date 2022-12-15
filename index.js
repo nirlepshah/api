@@ -18,7 +18,7 @@ let Users = Models.User
 
 let { movies, users } = require('./database.js');
 
-
+const port = process.env.PORT || 8000;
 const app = express()
 
 
@@ -357,6 +357,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 })
 
 
-app.listen(8080, () => {
-    console.log("App is runing on port 8080");
-})
+
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on Port ' + port);
+});
