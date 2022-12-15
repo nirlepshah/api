@@ -71,6 +71,9 @@ mongoose.connect(url,
 let auth = require('./auth')(app)
 require('./passport')
 
+app.get('/', (req, res) => {
+    res.status(200).send('Welcome to my Film API')
+})
 //GET all movies 
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
 
