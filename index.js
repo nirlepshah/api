@@ -18,7 +18,7 @@ let Users = Models.User
 
 let { movies, users } = require('./database.js');
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 const app = express()
 
 
@@ -71,7 +71,7 @@ mongoose.connect(url,
 let auth = require('./auth')(app)
 require('./passport')
 
-app.get('/', (req, res) => {
+app.get('/welcome', (req, res) => {
     res.status(200).send('Welcome to my Film API')
 })
 //GET all movies 
