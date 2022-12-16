@@ -24,6 +24,7 @@ const app = express()
 
 var allowedOrigins = ['http://localhost:8080',
     'http://yourapp.com'];
+
 app.use(cors({
     origin: function (origin, callback) {
 
@@ -48,7 +49,8 @@ app.use(express.static('public'))
 
 
 
-let url = 'mongodb://localhost:27017/myFilmDB'
+// let url = 'mongodb://localhost:27017/myFilmDB'
+let url = `${process.env.CONNECTION_URI}`
 
 
 
