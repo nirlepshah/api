@@ -23,6 +23,7 @@ const app = express()
 
 
 app.use(cors())
+
 // var allowedOrigins = ['http://localhost:8080',
 //     'http://yourapp.com'];
 
@@ -50,8 +51,8 @@ app.use(express.static('public'))
 
 
 
-// let url = 'mongodb://localhost:27017/myFilmDB'
-let url = `${process.env.CONNECTION_URI}`
+let url = 'mongodb://localhost:27017/myFilmDB'
+// let url = `${process.env.CONNECTION_URI}`
 
 
 
