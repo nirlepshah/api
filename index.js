@@ -78,7 +78,7 @@ app.get('/welcome', (req, res) => {
     res.status(200).send('Welcome to my Film API')
 })
 //GET all movies 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     Movies.find((err, movies) => {
         if (err) {
