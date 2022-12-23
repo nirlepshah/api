@@ -19,7 +19,7 @@ let Users = Models.User
 let { movies, users } = require('./database.js');
 
 const port = process.env.PORT || 3000;
-// const app = express()
+const app = express()
 
 
 app.use(cors())
